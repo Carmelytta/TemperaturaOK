@@ -1,0 +1,88 @@
+<!--Pagina web desarrollada para el TFG: Sistemas de Regadio por MC M-BS -->
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!--<link rel="stylesheet" href="estilo.css">-->
+     <style  type="text/css" >
+
+            #contenedor {background-color: #FFFF99; }
+            #cabecera{ border: 1px solid #ccc ; background-color: #FFCC33; text-align: center; }
+            #contenidos {}
+            #menu{ float: left; width: 15% ; border: 1px solid #ccc ; margin: 0.5em; }
+            #ppal{ float: left; width: 90% ; margin-left: 3em; }
+            #pie { clear: both ; border-top: 1px solid #ccc; background-color: #FFCC33; text-align: center;}
+      </style>
+      <script type="text/javascript">
+
+        // Load Charts and the corechart and barchart packages.
+        google.charts.load('current', {'packages':['corechart', 'bar', "timeline"]});
+
+        // Draw the pie chart and bar chart when Charts is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+        //Ajax es una tecnologia asincrona, los datos se solicitan al servidor y se carga en segundo plano sin interferir en el comportamiento de la pagina
+            $.ajax({
+                url: "/api/humedadS?samples=6",
+                context: document.body, 
+            }).done(function(data) {
+	        //alert(data.data);
+            var data2 = new google.visualization.DataTable(); // Se crea una tabla de nombre data1
+            data2.addColumn('string', 'Tiempo');                  //Añadimos columnas a nuestra tabla temperatura y fecha
+            data2.addColumn('number', 'HumedadS');
+
+            //Convertimos el objeto data en array
+            var array1 = $.map(data.data, function(value, index) {
+	            var aux = new Array(value.tiempo, value.humedadS);
+            return [aux, index];
+            });
+
+            //Extraemos del array los datos uno a uno y añadimos a cada fila de la tabla    
+            //	alert(array1); 
+            data.data.forEach(function(el) {
+                data2.addRow(new Array(el.tiempo, el.humedadS));
+            });  
+    
+            var barchart_options = google.charts.Bar.convertOptions({
+                title: 'Grafica de Humedad de Suelo',
+                height: 450});
+            var barchart = new google.charts.Bar(document.getElementById('barchart_div'));
+            barchart.draw(data2, barchart_options);
+            });
+      
+        }
+        </script>
+    </head>
+    <body>
+        <div id="contenedor">
+            <div id="cabecera"> 
+                <h1>Departamento de Ingeniería Electrónica</h1>
+            </div>
+            <div id="contenidos">
+        <!--<div id="menu">
+            <ul>
+                <li><a href="temperatura.html"> Grafica de Temperatura</a></li>
+                <li><a href="humedadT.html"> Grafica de la humedad del ambiente</a></li>
+                <li><a href="humedadS.html"> Grafica de la humedad del suelo</a></li>
+                <li><a href="conjunto.html"> Conjunto de graficas</a></li>
+            </ul>
+        </div>-->
+       
+                <div id="ppal" align="center"> 
+                    </br></br>
+                </div>
+            </div>
+            
+                <table class="columns">
+                    <tr>
+                        <td><div id="barchart_div" style="border: 1px solid #ccc"></div></td>
+                    </tr> 
+                </table>
+                </br></br>
+                <div id="pie"> 
+                <footer><em> TFG: Sistema de Regadio -- Maria del Carmen Martin - Bejarano Sanchez </em></footer>
+            </div>
+        </div>
+    </body>
+</html>

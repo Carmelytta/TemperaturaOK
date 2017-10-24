@@ -1,0 +1,8 @@
+Virtualenv proy me sirve para meter los paquetes que tengo que instalar y para volver a activarlo
+
+ejecuto source proy/bin/activate
+
+Para arrancar el servidor Flask
+
+FLASK_APP=hello.py FLASK_DEBUG=1 flask run
+
